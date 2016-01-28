@@ -106,7 +106,7 @@ function fromTopLeft(){
 			cols.forEach(function(col){
 				setStyles(col, {'transform':'rotateY('+( sidesSwitch == 1 ? '180deg' : '0deg' )+')'})
 			});
-		}, 120*times);
+		}, 100*times);
 	}
 	/* Seting a cycle to menage querque*/
 	do{
