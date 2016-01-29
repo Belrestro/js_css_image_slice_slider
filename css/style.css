@@ -3,18 +3,22 @@
 	padding:0;
 	border:0;
 }
+body {
+	text-align: center;
+}
 button {
 	border-radius: 4px;
 	padding:3px 4px;
 	display:inline-block;
 }
+
+.grid, .grid div:first-child,{
+	display: inline-block;
+	font-size:0;
+}
 .grid {
 	text-align: center;
 	padding:15px 0;
-}
-.grid div:first-child{
-	display: inline-block;
-	font-size:0;
 }
 .img-row, .img-col {
 	font-size:0;
@@ -42,6 +46,19 @@ button {
 .img-col.dim .back {
 	transform:translateZ(-2px) rotateY(180deg);
 
+}
+.generator {
+    background-color: whitesmoke;
+    padding: 10px;
+    margin-bottom: 15px;
+    display: block;
+}
+.generator input,.generator button  {
+	border: 1px solid #75BED0;
+    padding: 2px;
+    margin: 0 5px;
+    border-radius: 4px;
+    width: 50px;
 }
 .controls {
 	text-align: center;

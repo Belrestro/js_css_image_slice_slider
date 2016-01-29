@@ -11,6 +11,9 @@ function getE(element) {
 }
 function buildGrid(width, height, parent) {
 	//var sides = ['front','back','left','right','top','bottom'];
+	var width = width || getE('#grid-x').value;
+	var height = height || getE('#grid-y').value;
+	var parent = parent || getE('.grid')[0];
 	var sides = ['front', 'back'];
 	var rows = document.createElement('div');
 	rows.className = 'sliced-image';
@@ -95,7 +98,8 @@ function rotateXYZ(){
 		});
 	});
 }
-function fromTopLeft(){
+var spinTimes = 1;
+function slidePic(direction){
 	sidesSwitch = sidesSwitch == 1 ? 0 : 1;
 	var querque = grid.length*grid[0].length;
 	var turns = 0;
@@ -104,7 +108,7 @@ function fromTopLeft(){
 	function runTransform(cols, times) {
 		setTimeout(function(){
 			cols.forEach(function(col){
-				setStyles(col, {'transform':'rotateY('+( sidesSwitch == 1 ? '180deg' : '0deg' )+')'})
+				setStyles(col, {'transform':'rotateY('+( sidesSwitch == 1 ? (180*spinTimes)+'deg' : '0deg' )+')'})
 			});
 		}, 100*times);
 	}
@@ -127,4 +131,13 @@ function fromTopLeft(){
 		turns++;
 	} while (querque>0);
 }
-getE('#run-fromTopLeft').addEventListener('click', fromTopLeft);
+	grid = gridOfElements('img-row','img-col');
+getE('#create-grid').addEventListener('click', function(){
+	getE('.grid')[0].innerHTML = '';
+	buildGrid();
+	grid = gridOfElements('img-row','img-col');
+	spinTimes = getE('#cell-spins').value;
+	splitBackground(grid, 'images/1.jpg', size, 'back');
+	splitBackground(grid, 'images/2.jpg', size, 'front');
+});
+getE('#run-fromTopLeft').addEventListener('click', function(){slidePic('top-left')});
