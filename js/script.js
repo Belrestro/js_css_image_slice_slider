@@ -74,7 +74,7 @@ function splitBackground(grid, imgSrc, size, side){
 }
 
 /* ----- Testing ----- */
-buildGrid(12,12,getE('.grid')[0]);
+buildGrid(10,10,getE('.grid')[0]);
 var grid = gridOfElements('img-row','img-col');
 var size = {width:600, height:386};
 splitBackground(grid, 'images/1.jpg', size, 'back');
@@ -98,7 +98,7 @@ function rotateXYZ(){
 		});
 	});
 }
-var spinTimes = 1;
+var spinTimes = 0;
 function slidePic(direction){
 	sidesSwitch = sidesSwitch == 1 ? 0 : 1;
 	var querque = grid.length*grid[0].length;
@@ -108,36 +108,112 @@ function slidePic(direction){
 	function runTransform(cols, times) {
 		setTimeout(function(){
 			cols.forEach(function(col){
-				setStyles(col, {'transform':'rotateY('+( sidesSwitch == 1 ? (180*spinTimes)+'deg' : '0deg' )+')'})
+				setStyles(col, {'transform':'rotateY('+( sidesSwitch == 1 ? (180+(360*spinTimes))+'deg' : '0deg' )+')'})
 			});
 		}, 100*times);
 	}
 	/* Seting a cycle to menage querque*/
-	do{
-		if(!(progress[turns]) && turns < grid.length)
-			progress[turns] = -1;
-		for(var col in progress){
-			if(progress[col] < grid[0].length-1)
-				progress[col]++;
-			else
-				delete progress[col];
-		}
-		var colsInQuerque = [];
-		for (var row in progress) {
-			colsInQuerque.push(grid[row][progress[row]]);
-		}
-		runTransform(colsInQuerque, turns+1);
-		querque -= colsInQuerque.length;
-		turns++;
-	} while (querque>0);
+	switch(direction) {
+		case 'top-left' :
+			do{
+				if(!(progress[turns]) && turns < grid.length)
+					progress[turns] = -1;
+				for(var col in progress){
+					if(progress[col] < grid[0].length-1)
+						progress[col]++;
+					else
+						delete progress[col];
+				}
+				var colsInQuerque = [];
+				for (var row in progress) {
+					colsInQuerque.push(grid[row][progress[row]]);
+				}
+				runTransform(colsInQuerque, turns+1);
+				querque -= colsInQuerque.length;
+				turns++;
+			} while (querque>0);
+			break;
+		case 'bottom-left':
+			var rowNum = grid.length-1; 
+			do{
+				if(!(progress[rowNum]) && rowNum>=0){
+					progress[rowNum] = -1;
+					rowNum--;
+				}
+				for(var col in progress){
+					if(progress[col] < grid[0].length-1)
+						progress[col]++;
+					else
+						delete progress[col];
+				}
+				var colsInQuerque = [];
+				for (var row in progress) {
+					colsInQuerque.push(grid[row][progress[row]]);
+				}
+				runTransform(colsInQuerque, turns+1);
+				querque -= colsInQuerque.length;
+				if(turns>500)
+					return;
+				turns++;
+			} while (querque>0);
+			break;
+		case 'top-right':
+			do{
+				if(!(progress[turns]) && turns < grid.length)
+					progress[turns] = grid[0].length;
+				for(var col in progress){
+					if(progress[col]>0)
+						progress[col]--;
+					else
+						delete progress[col];
+				}
+				var colsInQuerque = [];
+				for (var row in progress) {
+					colsInQuerque.push(grid[row][progress[row]]);
+				}
+				runTransform(colsInQuerque, turns+1);
+				querque -= colsInQuerque.length;
+				turns++;
+			} while (querque>0);
+			break;
+		case 'bottom-right':
+			var rowNum = grid.length-1; 
+			do{
+				if(!(progress[rowNum]) && rowNum>=0){
+					progress[rowNum] = grid[0].length;
+					rowNum--;
+				}
+				for(var col in progress){
+					if(progress[col]>0)
+						progress[col]--;
+					else
+						delete progress[col];
+				}
+				var colsInQuerque = [];
+				for (var row in progress) {
+					colsInQuerque.push(grid[row][progress[row]]);
+				}
+				runTransform(colsInQuerque, turns+1);
+				querque -= colsInQuerque.length;
+				if(turns>400)
+					return;
+				turns++;
+			} while (querque>0);
+			break;
+	}
+	
 }
 	grid = gridOfElements('img-row','img-col');
 getE('#create-grid').addEventListener('click', function(){
 	getE('.grid')[0].innerHTML = '';
 	buildGrid();
 	grid = gridOfElements('img-row','img-col');
-	spinTimes = getE('#cell-spins').value;
 	splitBackground(grid, 'images/1.jpg', size, 'back');
 	splitBackground(grid, 'images/2.jpg', size, 'front');
+	spinTimes = getE('#cell-spins').value - 1;
+	sidesSwitch = 0;
 });
 getE('#run-fromTopLeft').addEventListener('click', function(){slidePic('top-left')});
+getE('#run-fromBottomLeft').addEventListener('click', function(){slidePic('bottom-left')});
+getE('#run-fromTopRight').addEventListener('click', function(){slidePic('top-right')});
+getE('#run-fromBottomRight').addEventListener('click', function(){slidePic('bottom-right')});
