@@ -20,6 +20,9 @@ button {
 .grid {
 	text-align: center;
 	padding:15px 0;
+	width:690px;
+	height:386px;
+	margin:0 auto;
 }
 .img-row, .img-col {
 	font-size:0;

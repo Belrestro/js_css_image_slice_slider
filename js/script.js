@@ -30,8 +30,7 @@ function setStyles(element, styleSheet){
 };
 function splitBackground(imgSrc, side, grid, size){
 	var grid = grid || this.grid;
-	var size = size || this.size;
-	console.log(grid);
+	var size = size || this.size();
 	console.log(size);
 	var height = grid.length;
 	var width = grid[0].length;
@@ -78,15 +77,21 @@ function buildGrid(width, height, parent, rowClass, colClass) {
 	}
 	parent.appendChild(rows);
 	parent.grid = gridOfElements(rowClass, colClass);
-	parent.size = {width:600, height:386};
+	parent.size = function(){
+		var style = window.getComputedStyle(this, null);
+		function numeric(propertie){
+			return Number(style.getPropertyValue(propertie).replace('px',''));
+		};
+		return {width : numeric('width'), height : numeric('height')};
+	};
 	parent.splitBackground = splitBackground;
 }
 /* ----- Testing ----- */
 buildGrid(10,10,getE('.grid')[0]);
 var grid = gridOfElements('img-row','img-col');
-var size = {width:600, height:386};
-splitBackground('images/1.jpg', 'back', grid, size);
-splitBackground('images/2.jpg', 'front', grid, size);
+var sizeTest = {width:600, height:386};
+splitBackground('images/1.jpg', 'back', grid, sizeTest);
+splitBackground('images/2.jpg', 'front', grid, sizeTest);
 
 // Needs to be testes on good perfomance pc 
 
@@ -201,12 +206,12 @@ function slidePic(direction){
 	
 }
 	grid = gridOfElements('img-row','img-col');
-getE('#create-grid').addEventListener('click', function(){
+	getE('#create-grid').addEventListener('click', function(){
 	getE('.grid')[0].innerHTML = '';
 	buildGrid();
 	grid = gridOfElements('img-row','img-col');
-	splitBackground('images/1.jpg','back', grid, size);
-	splitBackground('images/2.jpg', 'front', grid, size);
+	splitBackground('images/1.jpg','back', grid, sizeTest);
+	splitBackground('images/2.jpg', 'front', grid, sizeTest);
 	spinTimes = getE('#cell-spins').value - 1;
 	sidesSwitch = 0;
 });
